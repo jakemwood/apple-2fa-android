@@ -1,14 +1,14 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">2FA Receiver</string>
     <!-- Settings Activity Title -->
     <string name="title_activity_settings">Settings</string>
 
     <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
+    <string name="tunnel_discovery">Tunnel Discovery</string>
     <string name="sync_header">Sync</string>
 
     <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
+    <string name="url">Pointer URL</string>
     <string name="reply_title">Default reply action</string>
 
     <!-- Sync Preferences -->
