@@ -3,6 +3,8 @@
     <!-- Settings Activity Title -->
     <string name="title_activity_settings">Settings</string>
 
+    <string name="discovery_method">Discovery Method</string>
+
     <!-- Preference Titles -->
     <string name="tunnel_discovery">Tunnel Discovery</string>
     <string name="sync_header">Sync</string>

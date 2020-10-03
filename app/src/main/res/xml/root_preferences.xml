@@ -1,11 +1,28 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="@string/tunnel_discovery">
+    <Preference app:title="Grant permissions"
+        app:key="grantSMS"
+        app:summary="Give this app permission to receive SMS messages" />
+
+    <PreferenceCategory app:title="@string/tunnel_discovery" app:key="tunnel_discovery">
+
+        <ListPreference
+            app:defaultValue="sms"
+            app:entries="@array/discovery_names"
+            app:entryValues="@array/discovery_values"
+            app:key="discovery_mode"
+            app:title="@string/discovery_method"
+            app:useSimpleSummaryProvider="true"
+        />
+
+        <EditTextPreference app:key="twilio_phone" app:title="Phone Number"
+            app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
             app:key="url"
             app:title="@string/url"
-            app:useSimpleSummaryProvider="true" />
+            app:useSimpleSummaryProvider="true"
+            />
 
 <!--        <ListPreference-->
 <!--            app:defaultValue="reply"-->
@@ -14,10 +31,6 @@
 <!--            app:key="reply"-->
 <!--            app:title="@string/reply_title"-->
 <!--            app:useSimpleSummaryProvider="true" />-->
-
-        <Preference app:title="Grant permissions"
-            app:key="grantSMS"
-            app:summary="Give this app permission to receive SMS messages" />
 
     </PreferenceCategory>
 

@@ -1,12 +1,23 @@
 <resources>
     <!-- Reply Preference -->
-    <string-array name="reply_entries">
-        <item>Reply</item>
-        <item>Reply to all</item>
+<!--    <string-array name="reply_entries">-->
+<!--        <item>Reply</item>-->
+<!--        <item>Reply to all</item>-->
+<!--    </string-array>-->
+
+<!--    <string-array name="reply_values">-->
+<!--        <item>reply</item>-->
+<!--        <item>reply_all</item>-->
+<!--    </string-array>-->
+
+    <!-- Tunnel discovery options -->
+    <string-array name="discovery_names">
+        <item>SMS</item>
+        <item>Static URL</item>
     </string-array>
 
-    <string-array name="reply_values">
-        <item>reply</item>
-        <item>reply_all</item>
+    <string-array name="discovery_values">
+        <item>sms</item>
+        <item>url</item>
     </string-array>
 </resources>
