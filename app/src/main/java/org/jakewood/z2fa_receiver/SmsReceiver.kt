@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Telephony
 import android.telephony.SmsMessage
+import android.util.Log
 import android.widget.Toast
 import androidx.preference.PreferenceManager
 import com.github.kittinunf.fuel.core.extensions.jsonBody
@@ -22,47 +23,50 @@ class SmsReceiver : BroadcastReceiver() {
             SmsMessage.createFromPdu(obj)
         }
     }
+
+    private fun log(msg: String) {
+        Log.i("expo-apple-2fa", msg)
+    }
+
     @SuppressLint("ApplySharedPref")
     override fun onReceive(ctx: Context?, intent: Intent?) {
-        if (intent != null && intent.action == Telephony.Sms.Intents.SMS_RECEIVED_ACTION) {
-            val bundle = intent.extras
-            if (bundle != null) {
-                val pduObjs = bundle.get("pdus") as? Array<ByteArray>
-                if (pduObjs != null) {
-                    for (pdu in pduObjs) {
-                        val sms = getIncomingMessage(pdu, bundle)
+        this.log("expo-apple-2fa is working!")
 
-                        val settings = PreferenceManager.getDefaultSharedPreferences(ctx)
-                        val phone = settings.getString("twilio_phone", null)
+        if (!intent?.action.equals(Telephony.Sms.Intents.SMS_RECEIVED_ACTION)) {
+            return
+        }
 
-                        val body = sms.displayMessageBody.toString()
-                        val from = sms.displayOriginatingAddress.toString()
+        val bundle = intent!!.extras ?: return
+        val pduObjs = bundle.get("pdus") as? Array<ByteArray> ?: return
 
-                        println("From $from")
-                        println("Body $body")
+        for (pdu in pduObjs) {
+            val sms = getIncomingMessage(pdu, bundle)
 
-                        if (phone == from && body.startsWith("http")) {
-                            // Set our setting
-                            println("SET THE URL!!!")
-                            val editSettings = settings.edit()
-                            editSettings.putString("url", body)
-                            editSettings.commit()
-                        }
+            val settings = PreferenceManager.getDefaultSharedPreferences(ctx)
+            val phone = settings.getString("twilio_phone", null)
 
-                        if (body.contains("Your Apple ID Verification Code")) {
-                            println("APPLE ID RECEIVED!!!")
+            val body = sms.displayMessageBody.toString()
+            val from = sms.displayOriginatingAddress.toString()
 
-                            // Last 6 digits
-                            val code = body.substring(body.length - 6)
+            if (settings.getString("discovery_mode", null) == "sms") {
+                this.log("Discovery mode is SMS...")
+                if (phone == from && body.startsWith("http")) {
+                    this.log("Phone number matches and contains a URL!")
+                    // Set our setting
+                    val editSettings = settings.edit()
+                    editSettings.putString("url", body)
+                    editSettings.commit()
+                }
+            }
 
-                            // Send it!
-                            val url = settings.getString("url", null)
-                            url?.httpPost()?.jsonBody("{\"code\": \"$code\"}")?.response { response ->
-                                println(response)
-                                response.
-                            }
-                        }
-                    }
+            if (body.contains("Your Apple ID Verification Code")) {
+                // Last 6 digits
+                val code = body.substring(body.length - 6)
+
+                // Send it!
+                val url = settings.getString("url", null)
+                url?.httpPost()?.jsonBody("{\"code\": \"$code\"}")?.responseString { _ ->
+                    Toast.makeText(ctx, "Apple ID successfully transferred!", Toast.LENGTH_SHORT).show()
                 }
             }
         }
